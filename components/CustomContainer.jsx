@@ -1,14 +1,16 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, ScrollView, View } from 'react-native';
 import MenuScreen from '../screens/userScreens/MenuScreen';
+import { useAuthentication } from '../contexts/useAuthentification';
 
-export default function CustomContainer({ children }) {
+export default function CustomContainer({ children, refreshControl  }) {
+  const user = useAuthentication()
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} refreshControl={refreshControl}>
         {children}
       </ScrollView>
-      <MenuScreen />
+      {user.user && <MenuScreen />}
     </SafeAreaView>
   );
 }

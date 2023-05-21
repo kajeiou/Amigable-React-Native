@@ -3,14 +3,15 @@ import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getUserFromAsyncStorage } from '../utils/AsyncStorageUtil';
 import { Post } from '../classes/Post';
 import UserService from '../services/UserService';
+import { Comment } from '../classes/Comment';
 
 const firestore = getFirestore();
-
 const PostService = {
+ 
   createPost: async (content, imageURL, isPublic) => {
     try {
-      const user = await getUserFromAsyncStorage();
-      const { uid } = user;
+      const userA = await getUserFromAsyncStorage();
+      const { uid } = userA;
   
       const post = {
         content,
@@ -36,6 +37,7 @@ const PostService = {
   getPosts: async () => {
     try {
       const querySnapshot = await getDocs(collection(firestore, 'posts'));
+  
       const posts = [];
   
       const userPromises = [];
@@ -43,27 +45,40 @@ const PostService = {
         const userPromise = UserService.getUserById(doc.data().userId);
         userPromises.push(userPromise);
       }
-  
       const users = await Promise.all(userPromises);
   
       for (let i = 0; i < querySnapshot.docs.length; i++) {
         const doc = querySnapshot.docs[i];
         const user = users[i];
   
+        const comments = doc.data().comments.map((comment) => {
+          const commentUser = users.find((u) => {
+            return u.uid === comment.userId;
+          });
+          
+          return new Comment(
+            comment.id,
+            comment.content,
+            comment.userId,
+            comment.createdAt,
+            comment.likes,
+            commentUser
+          );
+        });
+        
         const post = new Post(
           doc.id,
           doc.data().content,
           doc.data().userId,
           doc.data().createdAt,
           doc.data().likes,
-          doc.data().comments,
+          comments,
           doc.data().imageURL,
           doc.data().isPublic,
           doc.data().attachments,
           doc.data().isEdited,
           user
         );
-  
         posts.push(post);
       }
   
@@ -74,7 +89,6 @@ const PostService = {
     }
   },
   
-
   updatePost: async (postId, updatedData) => {
     try {
       const postRef = doc(firestore, 'posts', postId);
@@ -96,31 +110,69 @@ const PostService = {
     }
   },
 
-  likePost: async (postId, userId) => {
+  likePost: async (postId) => {
     try {
+      const userA = await getUserFromAsyncStorage();
+      const { uid } = userA;
       const postRef = doc(firestore, 'posts', postId);
       const postSnapshot = await getDoc(postRef);
       const postData = postSnapshot.data();
-
-      // Vérifier si l'utilisateur a déjà aimé le post
-      const userIndex = postData.likes.indexOf(userId);
+      const userIndex = postData.likes.indexOf(uid);
 
       if (userIndex === -1) {
         // L'utilisateur n'a pas aimé le post, ajoutez son ID dans le tableau des likes
-        postData.likes.push(userId);
+        postData.likes.push(uid);
       } else {
         // L'utilisateur a déjà aimé le post, retirez son ID du tableau des likes
         postData.likes.splice(userIndex, 1);
       }
 
-      // Mettre à jour le champ "likes" du document avec le tableau modifié
       await updateDoc(postRef, { likes: postData.likes });
-      return true; // Retourner true pour indiquer que le like a été ajouté ou supprimé
+      return true;
     } catch (error) {
       console.log('Erreur lors de la mise à jour du like :', error.message);
       throw error;
     }
+  },
+
+  addCommentToPost: async (postId, commentText) => {
+    try {
+      const userA = await getUserFromAsyncStorage();
+      const { uid } = userA;
+      const postRef = doc(firestore, 'posts', postId);
+      const postSnapshot = await getDoc(postRef);
+      const postData = postSnapshot.data();
+  
+      const newComment = {
+        userId: uid, 
+        content: commentText, 
+        createdAt: new Date().toISOString(),
+        likes: [],
+      };      
+  
+      postData.comments.push(newComment);
+  
+      await updateDoc(postRef, { comments: postData.comments });
+  
+      // Récupère les données mises à jour du post
+      const updatedPostSnapshot = await getDoc(postRef);
+      const updatedPostData = updatedPostSnapshot.data();
+  
+      // Ajoute l'utilisateur au post
+      const user = await UserService.getUserById(updatedPostData.userId);
+  
+      // Retourne les données mises à jour du post avec l'utilisateur
+      return {
+        ...updatedPostData,
+        id: updatedPostSnapshot.id,
+        user: user
+      };
+    } catch (error) {
+      console.log('Erreur lors de l\'ajout du commentaire :', error.message);
+      throw error;
+    }
   }
+  
   
 };
 

@@ -14,7 +14,6 @@ export default function LaunchScreen() {
   return (
     <CustomContainer>
       <Title text="Bienvenue" />
-      <Image className="logo" source={require('../../assets/logo0.png')} />
 
       <Text style={styles.description}>
         Connectez-vous avec vos amis et découvrez le monde qui vous entoure.

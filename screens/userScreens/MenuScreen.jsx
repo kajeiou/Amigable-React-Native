@@ -12,10 +12,10 @@ export default function MenuScreen() {
           <MaterialIcons name='add-box' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]}>
-          <Ionicons name='search' style={styles.menuIcon} />
+          <MaterialIcons name='search' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]} onPress={() => navigation.navigate('Home')}>
-          <Ionicons name='home' style={styles.menuIcon} />
+          <MaterialIcons name='home' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('Notifications')}>
           <Entypo name='notification' style={styles.menuIcon} />
@@ -26,33 +26,35 @@ export default function MenuScreen() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: 0,
+      flexDirection: 'row',
+      width: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
     },
     menuItem: {
-        flex: 1,
-        padding: 15,
-        alignItems: 'center',
-        justifyContent: 'center',
+      flex: 1,
+      padding: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     menuItemSmall: {
-        backgroundColor: 'white',
+      flex: 0.5, // Ajuster la hauteur des éléments plus petits
+      backgroundColor: 'white',
     },
     menuItemLarge: {
-        backgroundColor: 'white',
+      flex: 1, // Ajuster la hauteur des éléments plus grands
+      backgroundColor: 'white',
     },
     menuItemText: {
-        fontWeight: 'bold',
+      fontWeight: 'bold',
     },
     menuIcon : {
-        color:'#900C3F',
-        fontSize:30
+      color:'#900C3F',
+      fontSize:30
     }
 });
+  

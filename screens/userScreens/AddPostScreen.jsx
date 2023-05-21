@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
-import { MaterialIcons,Feather } from '@expo/vector-icons'; // Import des icônes MaterialIcons
+import { MaterialIcons } from '@expo/vector-icons'; // Import des icônes MaterialIcons
 import CustomContainer from '../../components/CustomContainer';
 import Title from '../../components/Title';
 import CustomTextInput from '../../components/CustomTextInput';
@@ -13,21 +13,16 @@ export default function AddPostScreen() {
   const [imageURL, setImageURL] = useState('');
   const [isPublic, setIsPublic] = useState(true);
 
-  const handleCreatePost = async () => {
-    // Logique pour créer le post
-    console.log('Contenu du post :', content);
-    console.log('URL de l\'image :', imageURL);
-    console.log('Public :', isPublic);
-    
+  const handleCreatePost = async () => {   
     try {
-        const postId = await PostService.createPost(content,imageURL,isPublic);
-        console.log('Post créé avec succès ! ID :', postId);
-        alert("Post créé avec succès !")
-        setContent("")
-        setImageURL("")
-      } catch (e) {
+      const postId = await PostService.createPost(content,imageURL,isPublic);
+      console.log('Post créé avec succès ! ID :', postId);
+      alert("Post créé avec succès !")
+      setContent("")
+      setImageURL("")
+    } catch (e) {
         alert(e.message);
-      }
+    }
   };
 
   const handleAttachImage = () => {

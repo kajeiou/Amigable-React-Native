@@ -14,7 +14,7 @@ export default function ProfilScreen() {
   const navigation = useNavigation();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
-  const [photoURL, setPhotoURL] = useState('');
+  const [photoURL, setPhotoURL] = useState(emptyPhoto);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [biography, setBiography] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
