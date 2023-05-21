@@ -32,13 +32,12 @@ export function AuthenticatedApp() {
         return <Loading/>;
     }
 
-    // Kullanıcının oturum açmış olduğu uygulama bileşenleri
 }
 
 export function UnauthenticatedApp() {
     return (
         <View>
-            <Text>You need to sign in to use this app.</Text>
+            <Text>Tu dois être connecté pour utiliser l'application.</Text>
         </View>
     );
 }
