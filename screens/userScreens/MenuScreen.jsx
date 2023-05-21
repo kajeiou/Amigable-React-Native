@@ -4,36 +4,24 @@ import {Ionicons, Entypo, Feather, MaterialIcons } from 'react-native-vector-ico
 import { useNavigation } from '@react-navigation/native';
 
 export default function MenuScreen() {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]}>
-        <Text style={styles.menuItemText}>
-            <MaterialIcons name='add-box' style={styles.menuIcon} onPress={() => navigation.navigate('AddPost')}/>
-        </Text>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('AddPost')}>
+          <MaterialIcons name='add-box' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]}>
-        <Text style={styles.menuItemText}>
-            <Ionicons name='search' style={styles.menuIcon}/>
-        </Text>
+          <Ionicons name='search' style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]}>
-        <Text style={styles.menuItemText}>
-            <Ionicons name='home' style={styles.menuIcon}  onPress={() => navigation.navigate('Home')}/>
-        </Text>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]} onPress={() => navigation.navigate('Home')}>
+          <Ionicons name='home' style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]}>
-        <Text style={styles.menuItemText}>
-        <Text style={styles.menuItemText}>
-            <Entypo name='notification' style={styles.menuIcon}/>
-        </Text>
-        </Text>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('Notifications')}>
+          <Entypo name='notification' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('Profil')}>
-        <Text style={styles.menuItemText}>
-            <Feather name='user' style={styles.menuIcon}/>
-        </Text>
+          <Feather name='user' style={styles.menuIcon} />
       </TouchableOpacity>
     </View>
   );
