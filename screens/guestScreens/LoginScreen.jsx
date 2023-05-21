@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import Title from '../components/Title';
+import Title from '../../components/Title';
 
-import AuthService from "../services/AuthService";
-import CustomButton from '../components/CustomButton';
-import DividerRow from '../components/DividerRow';
-import CustomTextInput from '../components/CustomTextInput';
-import CustomContainer from '../components/CustomContainer';
+import AuthService from "../../services/UserService";
+import CustomButton from '../../components/CustomButton';
+import DividerRow from '../../components/DividerRow';
+import CustomTextInput from '../../components/CustomTextInput';
+import CustomContainer from '../../components/CustomContainer';
 
-export default function SignupScreen() {
+export default function LoginScreen() {
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
@@ -51,11 +52,11 @@ export default function SignupScreen() {
   return (
     <CustomContainer>
         <Title text="Connecte-toi !" />
-
         <CustomTextInput
           placeholder="Adresse e-mail"
           value={email}
           onChangeText={(textEntered) => onChangeHandler(textEntered, 'email')}
+          keyboardType="email-address"
         />   
         <CustomTextInput
           placeholder="Mot de passe"

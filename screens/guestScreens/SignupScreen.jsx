@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import Title from '../components/Title';
+import Title from '../../components/Title';
 
-import AuthService from "../services/AuthService";
-import CustomButton from '../components/CustomButton';
-import DividerRow from '../components/DividerRow';
-import CustomTextInput from '../components/CustomTextInput';
-import CustomContainer from '../components/CustomContainer';
+import UserService from "../../services/UserService";
+import CustomButton from '../../components/CustomButton';
+import DividerRow from '../../components/DividerRow';
+import CustomTextInput from '../../components/CustomTextInput';
+import CustomContainer from '../../components/CustomContainer';
 
 export default function SignupScreen() {
   const [email, setEmail] = useState('');
+  const [displayName, setdisplayName] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
@@ -21,13 +22,13 @@ export default function SignupScreen() {
   }, [email, password, repeatPassword]);
 
   const validateForm = () => {
-    setIsFormValid(email !== '' && password !== '' && password === repeatPassword);
+    setIsFormValid(email !== '' && displayName!=='' && password !== '' && password === repeatPassword);
   };
 
   const handleSignup = async () => {
     if (isFormValid) {
       try {
-        await AuthService.register(email, password);
+        await UserService.register(email, displayName, password);
         alert("Tu t'es inscrit avec succès ");
       } catch (e) {
         alert(e.message);
@@ -42,6 +43,10 @@ export default function SignupScreen() {
       case 'email':
         setEmail(textEntered);
         break;
+      case 'displayName':
+        setdisplayName(textEntered);
+        break;
+
       case 'password':
         setPassword(textEntered);
         break;
@@ -56,11 +61,17 @@ export default function SignupScreen() {
   return (
     <CustomContainer>
         <Title text="Inscrit-toi !" />
+        <CustomTextInput
+          placeholder="Nom d'utilisateur"
+          value={displayName}
+          onChangeText={(textEntered) => onChangeHandler(textEntered, 'displayName')}
+        />
 
         <CustomTextInput
           placeholder="Adresse e-mail"
           value={email}
           onChangeText={(textEntered) => onChangeHandler(textEntered, 'email')}
+          keyboardType="email-address"
         />   
         <CustomTextInput
           placeholder="Mot de passe"

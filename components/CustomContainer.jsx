@@ -1,5 +1,6 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, View } from 'react-native';
+import MenuScreen from '../screens/userScreens/MenuScreen';
 
 export default function CustomContainer({ children }) {
   return (
@@ -7,6 +8,7 @@ export default function CustomContainer({ children }) {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {children}
       </ScrollView>
+      <MenuScreen />
     </SafeAreaView>
   );
 }
@@ -14,11 +16,12 @@ export default function CustomContainer({ children }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom:100,
   },
   scrollContainer: {
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingBottom: 60, // Ajout d'un padding au bas de la liste
   },
 });
