@@ -5,7 +5,7 @@ import CustomContainer from '../../components/CustomContainer';
 import Title from '../../components/Title';
 import CustomTextInput from '../../components/CustomTextInput';
 import CustomButton from '../../components/CustomButton';
-import * as ImagePicker from 'expo-image-picker'; // Import d'ImagePicker
+import * as ImagePicker from 'expo-image-picker';
 import PostService from "../../services/PostService";
 import CustomCarousel from '../../components/CustomCarousel';
 import MenuScreen from './Menu/MenuScreen';
@@ -18,8 +18,7 @@ export default function AddPostScreen() {
   const handleCreatePost = async () => {   
     try {
       const postId = await PostService.createPost(content, imageURIs, isPublic);
-      console.log('Post créé avec succès ! ID :', postId);
-      alert("Post créé avec succès !");
+      alert("Votre publication a été publié avec succès.");
       setContent("");
       setImageURIs([]);
     } catch (e) {
@@ -46,8 +45,8 @@ export default function AddPostScreen() {
       setImageURIs(prevURIs => [...prevURIs, ...uris]);
 
     } catch (error) {
-      console.log('Erreur lors de l\'attachement de l\'image :', error.message);
-      alert('Erreur lors de l\'attachement de l\'image');
+      console.log('[AddPost Screen] Erreur lors de l\'attachement de l\'image :', error.message);
+      alert('[AddPost Screen] Erreur lors de l\'attachement de l\'image');
     }
   };
 

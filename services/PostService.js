@@ -1,9 +1,11 @@
-import { getFirestore, collection, addDoc, getDocs, getDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, getDoc } from 'firebase/firestore';
 import { doc, updateDoc, deleteDoc,query, where, orderBy } from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL,uploadBytes } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL,uploadBytes, getMetadata  } from 'firebase/storage';
 import { getUserFromAsyncStorage } from '../utils/AsyncStorageUtil';
 import { Post } from '../classes/Post';
 import UserService from '../services/UserService';
+import ImageService from '../services/ImageService';
+import NotificationService from '../services/NotificationService';
 import { Comment } from '../classes/Comment';
 
 const firestore = getFirestore();
@@ -26,8 +28,9 @@ const PostService = {
         attachments: [],
         isEdited: false
       };
-  
-      const postRef = await addDoc(collection(firestore, 'posts'), post);
+      
+      const collectionRef = collection(firestore, 'posts');
+      const postRef = await addDoc(collectionRef, post);
       const postId = postRef.id;
   
       const imagePromises = imageURIs.map(async (uri) => {
@@ -46,13 +49,11 @@ const PostService = {
   
       return postId;
     } catch (error) {
-      console.log('Erreur lors de la création du post :', error.message);
+      console.log('[Post Service] Erreur lors de la création du post :', error.message);
       throw error;
     }
   },
   
-  
-
   getPosts: async () => {
     try {
       const querySnapshot = await getDocs(
@@ -90,6 +91,12 @@ const PostService = {
             commentUser
           );
         });
+
+        const imageAvailability = await ImageService.checkImageAvailability(doc.data().imageURIs);
+
+        const updatedImageURIs = doc.data().imageURIs.filter((imageURI, index) => {
+          return imageAvailability[index] === true;
+        });
   
         const post = new Post(
           doc.id,
@@ -98,7 +105,7 @@ const PostService = {
           doc.data().createdAt,
           doc.data().likes,
           comments,
-          doc.data().imageURIs,
+          updatedImageURIs,
           doc.data().isPublic,
           doc.data().attachments,
           doc.data().isEdited,
@@ -109,7 +116,7 @@ const PostService = {
   
       return posts;
     } catch (error) {
-      console.log(error.message);
+      console.log("[Post Service] " + error.message);
       throw error;
     }
   },
@@ -120,7 +127,7 @@ const PostService = {
       await updateDoc(postRef, updatedData);
       return true;
     } catch (error) {
-      console.log(error.message);
+      console.log("[Post Service] " + error.message);
       return false;
     }
   },
@@ -130,7 +137,7 @@ const PostService = {
       await deleteDoc(doc(firestore, 'posts', postId));
       return true;
     } catch (error) {
-      console.log(error.message);
+      console.log("[Post Service] " + error.message);
       return false;
     }
   },
@@ -147,6 +154,7 @@ const PostService = {
       if (userIndex === -1) {
         // L'utilisateur n'a pas aimé le post, ajoutez son ID dans le tableau des likes
         postData.likes.push(uid);
+        NotificationService.createNotificationPostLike(uid,postData.userId, postId)
       } else {
         // L'utilisateur a déjà aimé le post, retirez son ID du tableau des likes
         postData.likes.splice(userIndex, 1);
@@ -155,7 +163,7 @@ const PostService = {
       await updateDoc(postRef, { likes: postData.likes });
       return true;
     } catch (error) {
-      console.log('Erreur lors de la mise à jour du like :', error.message);
+      console.log('[Post Service] Erreur lors de la mise à jour du like :', error.message);
       throw error;
     }
   },
@@ -193,7 +201,7 @@ const PostService = {
         user: user
       };
     } catch (error) {
-      console.log('Erreur lors de l\'ajout du commentaire :', error.message);
+      console.log('[Post Service] Erreur lors de l\'ajout du commentaire :', error.message);
       throw error;
     }
   },
@@ -236,6 +244,11 @@ const PostService = {
             commentUser
           );
         });
+        const imageAvailability = await ImageService.checkImageAvailability(doc.data().imageURIs);
+
+        const updatedImageURIs = doc.data().imageURIs.filter((imageURI, index) => {
+          return imageAvailability[index] === true;
+        });
   
         const post = new Post(
           doc.id,
@@ -244,7 +257,7 @@ const PostService = {
           doc.data().createdAt,
           doc.data().likes,
           comments,
-          doc.data().imageURIs,
+          updatedImageURIs,
           doc.data().isPublic,
           doc.data().attachments,
           doc.data().isEdited,
@@ -255,10 +268,12 @@ const PostService = {
   
       return posts;
     } catch (error) {
-      console.log(error.message);
+      console.log("[Post Service] "+ error.message);
       throw error;
     }
-  }
+  },
+
+  
   
   
   

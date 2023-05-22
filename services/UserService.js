@@ -38,7 +38,6 @@ const AuthService = {
       );
       await setDoc(doc(firestore, 'users', user.uid), { ...user }, { merge: true });
       await addUserToAsyncStorage(user);
-      console.log(user); // save user info in AsyncStorage
       return user;
     } catch (error) {
       throw error;
@@ -111,7 +110,7 @@ const AuthService = {
   
       return true;
     } catch (error) {
-      console.log(error.message);
+      console.log("[User Service] "+error.message);
       return error;
     }
   },
@@ -119,7 +118,7 @@ const AuthService = {
     updateEmail(auth.currentUser, email).then(() => {
         return true
     }).catch((error) => {
-        console.log(error.message)
+        console.log("[User Service] "+error.message)
         return error.message
     });
   },
@@ -127,7 +126,7 @@ const AuthService = {
     try {
         return await sendEmailVerification(auth.currentUser)
     } catch (e) {
-        console.log(e.message)
+        console.log("[User Service] "+e.message)
         return e.message
     }
   },
@@ -136,7 +135,7 @@ const AuthService = {
       try {
           return await signOut(auth);
       } catch (error) {
-          console.log(e.message)
+          console.log("[User Service] "+ e.message)
           return e.message
       }
   },
@@ -146,7 +145,7 @@ const AuthService = {
       if (userSnapshot.exists()) {
         return userSnapshot.data();
       } else {
-        throw new Error('User not found');
+        throw new Error('[User Service] User not found');
       }
     } catch (error) {
       throw error;

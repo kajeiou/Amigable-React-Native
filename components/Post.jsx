@@ -176,12 +176,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
+  carousel: {
+    marginBottom:12
+  },
   postUser: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   postContent: {
     marginBottom: 8,
+    marginLeft:8
   },
   likesCommentsContainer: {
     flexDirection: 'row',

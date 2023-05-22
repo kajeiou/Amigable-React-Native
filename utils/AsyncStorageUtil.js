@@ -9,7 +9,7 @@ export const getUserFromAsyncStorage = async () => {
     }
     return null;
   } catch (error) {
-    console.log('Error retrieving user from AsyncStorage:', error);
+    console.log('[AsyncStorageUtil] Utilisateur non trouvé fromAsyncStorage:', error);
     return null;
   }
 };
@@ -18,9 +18,8 @@ export const addUserToAsyncStorage = async (user) => {
   try {
     const userJSON = JSON.stringify(user);
     await AsyncStorage.setItem('user', userJSON);
-    console.log('User added to AsyncStorage:', user);
   } catch (error) {
-    console.log('Error adding user to AsyncStorage:', error);
+    console.log('[AsyncStorageUtil] Utilisateur non ajouté AsyncStorage:', error);
   }
 };
 
@@ -28,9 +27,8 @@ export const updateUserToAsyncStorage = async (user) => {
   try {
     const userJSON = JSON.stringify(user);
     await AsyncStorage.setItem('user', userJSON);
-    console.log('User updated in AsyncStorage:', user);
   } catch (error) {
-    console.log('Error updating user in AsyncStorage:', error);
+    console.log('[AsyncStorageUtil] Utilisateur non édité AsyncStorage:', error);
   }
 };
 

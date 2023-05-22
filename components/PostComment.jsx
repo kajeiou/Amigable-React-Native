@@ -21,7 +21,7 @@ export default function PostComment({ post, posts, setPosts }) {
         setPosts(updatedPosts);
         setCommentText('');
       } catch (error) {
-        console.log("Erreur lors de l'ajout du commentaire :", error.message);
+        console.log("[PostComment] Erreur lors de l'ajout du commentaire :", error.message);
       }
     }
   };

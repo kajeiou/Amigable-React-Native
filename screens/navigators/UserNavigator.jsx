@@ -7,19 +7,15 @@ import Profil from '../userScreens/Profil/Profil';
 
 const Stack = createNativeStackNavigator();
 
-export default function UserNavigator() {
+export default function UserNavigator({notifications,newNotifications, fetchNotifications}) {
   return (
     <Stack.Navigator>
+
+      <Stack.Screen name="TabHome" options={{ title: 'Accueil', headerShown: false }}>
+        {() => <Home newNotifications={newNotifications} />}
+      </Stack.Screen>
       <Stack.Screen
-        name="HomeTab"
-        component={Home}
-        options={{
-          title: 'Accueil',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="ProfilTab"
+        name="TabProfil"
         component={Profil}
         options={{
           title: 'Profil',
@@ -34,14 +30,11 @@ export default function UserNavigator() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="Notifications"
-        component={NotificationScreen}
-        options={{
-          title: 'Notifications',
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen name="Notifications" options={{ title: 'Notifications', headerShown: false }}>
+        {() => <NotificationScreen notifications={notifications} newNotifications={newNotifications} fetchNotifications={fetchNotifications} />}
+      </Stack.Screen>
+
+
     </Stack.Navigator>
   );
 }

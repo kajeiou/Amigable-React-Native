@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import {Ionicons, Entypo, Feather, MaterialIcons } from 'react-native-vector-icons'
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
 export default function MenuScreen() {
@@ -14,13 +15,13 @@ export default function MenuScreen() {
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]}>
           <MaterialIcons name='search' style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]} onPress={() => navigation.navigate('HomeTab')}>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]} onPress={() => navigation.navigate('TabHome')}>
           <MaterialIcons name='home' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('Notifications')}>
           <Entypo name='notification' style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('ProfilTab')}>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('TabProfil')}>
           <Feather name='user' style={styles.menuIcon} />
       </TouchableOpacity>
     </View>

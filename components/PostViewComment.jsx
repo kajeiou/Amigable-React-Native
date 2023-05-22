@@ -14,7 +14,9 @@ export default function PostViewComment({ showComments, post, onPress }) {
                 <View style={styles.postHeader}>
                 <Image
                   source={
-                    post.user.photoURL=='' ? { uri: post.user.photoURL } : emptyPhoto
+                    comment.user.photoURL && comment.user.photoURL !==''
+                      ? { uri: post.user.photoURL }
+                      : emptyPhoto
                   }
                   style={styles.userPhoto}
                 />

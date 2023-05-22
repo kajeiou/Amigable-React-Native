@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomContainer from "../../../components/CustomContainer";
 import Title from '../../../components/Title';
@@ -8,13 +7,16 @@ import CustomTextInput from '../../../components/CustomTextInput';
 import AuthService from '../../../services/UserService';
 import emptyPhoto from '../../../assets/images/empty_photo.png';
 import CustomButton from '../../../components/CustomButton';
+import * as ImagePicker from 'expo-image-picker';
 import { getUserFromAsyncStorage } from '../../../utils/AsyncStorageUtil';
+import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function ProfilScreen() {
   const navigation = useNavigation();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
-  const [photoURL, setPhotoURL] = useState(emptyPhoto);
+  const [photoURL, setPhotoURL] = useState("");
   const [phoneNumber, setPhoneNumber] = useState('');
   const [biography, setBiography] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
@@ -50,7 +52,7 @@ export default function ProfilScreen() {
         setBiography(storedUser.biography);
         setEmailVerified(storedUser.emailVerified);
       } catch (error) {
-        console.log('Erreur lors du chargement des données:', error);
+        console.log('[Profil Screen] Erreur lors du chargement des données:', error);
       }
     };
 
@@ -80,7 +82,7 @@ export default function ProfilScreen() {
       setEmailVerified(formData.emailVerified);
       setIsFormModified(false);
     } catch (error) {
-      console.log(error.message);
+      console.log("[Profil Screen]" + error.message);
     }
   };
 
@@ -99,7 +101,45 @@ export default function ProfilScreen() {
       await AuthService.signOut();
       navigation.navigate('Login');
     } catch (error) {
-      console.log(error.message);
+      console.log("Profil Screen" + error.message);
+    }
+  };
+  const handleAttachImage = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permissionResult.granted === false) {
+        alert("Permission d'accès à la bibliothèque d'images refusée");
+        return;
+      }
+
+      const pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+      if (pickerResult.canceled === true) {
+        return;
+      }
+      const { assets } = pickerResult;
+      const uris = assets.map(asset => asset.uri);
+      setPhotoURL(uris[0])
+      setIsFormModified(true);
+
+      await AuthService.updateUser(
+        formData.displayName,
+        uris[0], 
+        formData.phoneNumber,
+        formData.biography
+      );
+
+      setFormData((prevData) => ({
+        ...prevData,
+        photoURL: uris[0],
+      }));
+
+      setIsFormModified(false);
+
+    } catch (error) {
+      console.log('[Profil Screen] Erreur lors de l\'attachement de l\'image :', error.message);
+      alert('Erreur lors de l\'attachement de l\'image');
     }
   };
 
@@ -109,6 +149,14 @@ export default function ProfilScreen() {
         <Title text={displayName} />
         <View style={styles.profileContainer}>
           <View style={styles.photoContainer}>
+          <Image
+            source={
+              photoURL && photoURL !==''
+                ? { uri: photoURL }
+                : emptyPhoto
+            }
+            style={styles.userPhoto}
+          />
           {emailVerified ? (
             <View style={styles.verifiedContainer}>
               <Octicons name="webhook" size={24} color="#2CC90D" />
@@ -141,6 +189,9 @@ export default function ProfilScreen() {
               onChangeText={(textEntered) => handleChange('photoURL', textEntered)}
               keyboardType="url"
             />
+            <TouchableOpacity onPress={handleAttachImage}>
+              <MaterialIcons name="camera-alt" size={30} color="#000" style={styles.buttonIcon} />
+            </TouchableOpacity>
 
             <CustomTextInput
               placeholder="Numéro de téléphone"
@@ -177,10 +228,16 @@ const styles = StyleSheet.create({
   },
   photoContainer: {
     position: 'relative',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#ccc',
+    width: 100,
+    height: 100,
+    padding:10,
+
+  },
+  userPhoto: {
+    width: "100%",
+    height: "100%",
+    marginRight: 8,
+    borderRadius: 50,
   },
   infoContainer: {
     flex: 1,
