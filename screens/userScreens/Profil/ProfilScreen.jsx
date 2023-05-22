@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import CustomContainer from "../../components/CustomContainer";
-import Title from '../../components/Title';
+import CustomContainer from "../../../components/CustomContainer";
+import Title from '../../../components/Title';
 import Octicons from 'react-native-vector-icons/Octicons';
-import CustomTextInput from '../../components/CustomTextInput';
-import AuthService from '../../services/UserService';
-import emptyPhoto from '../../assets/images/empty_photo.png';
-import CustomButton from '../../components/CustomButton';
-import { getUserFromAsyncStorage } from '../../utils/AsyncStorageUtil';
+import CustomTextInput from '../../../components/CustomTextInput';
+import AuthService from '../../../services/UserService';
+import emptyPhoto from '../../../assets/images/empty_photo.png';
+import CustomButton from '../../../components/CustomButton';
+import { getUserFromAsyncStorage } from '../../../utils/AsyncStorageUtil';
 
 export default function ProfilScreen() {
   const navigation = useNavigation();
@@ -158,7 +158,7 @@ export default function ProfilScreen() {
         </View>
         <CustomButton text="Déconnexion" onPress={handleLogout} />
       </View>
-    </CustomContainer>
+    </CustomContainer>  
   );
 }
 
@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 50,
     paddingBottom: 150
   },
   profileContainer: {

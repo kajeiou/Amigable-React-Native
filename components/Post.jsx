@@ -6,31 +6,30 @@ import PostService from './../services/PostService';
 import { useAuthentication } from './../contexts/useAuthentification';
 import PostComment from './PostComment';
 import emptyPhoto from './../assets/images/empty_photo.png';
+import CustomCarousel from './CustomCarousel';
 
 export default function Post({ post, posts, setPosts }) {
-    const likeAnimationsRef = useRef({});
+  const likeAnimationsRef = useRef({});
 
-    const user = useAuthentication();
-    const lastTapRef = useRef(null);
+  const user = useAuthentication();
+  const lastTapRef = useRef(null);
 
-    const handleDoubleTap = (postId) => {
-        const doubleTapDelay = 300; // 300 milliseconds
-        const now = Date.now();
-        const lastTap = lastTapRef.current;
-        lastTapRef.current = now;
+  const handleDoubleTap = (postId) => {
+    const doubleTapDelay = 300; // 300 milliseconds
+    const now = Date.now();
+    const lastTap = lastTapRef.current;
+    lastTapRef.current = now;
 
-        if (lastTap && now - lastTap < doubleTapDelay) {
-        toggleLikePost(postId); // Double tap, toggle like
+    if (lastTap && now - lastTap < doubleTapDelay) {
+    toggleLikePost(postId); // Double tap, toggle like
 
-        }
-    };
+    }
+  };
   
-
   const toggleLikePost = async (postId) => {
     try {  
       const post = posts.find((post) => post.id === postId);
       startLikeAnimation(postId);
-  
       await PostService.likePost(postId);
   
       const updatedPosts = posts.map((post) => {
@@ -74,17 +73,21 @@ export default function Post({ post, posts, setPosts }) {
     <TouchableWithoutFeedback key={post.id} onPress={() => handleDoubleTap(post.id)}>
       <View style={styles.post}>
         <View style={styles.postHeader}>
-        <Image
-          source={
-            post.user.photoURL==''
-              ? { uri: post.user.photoURL }
-              : emptyPhoto
-          }
-          style={styles.userPhoto}
-        />
+          <Image
+            source={
+              post.user.photoURL && post.user.photoURL !==''
+                ? { uri: post.user.photoURL }
+                : emptyPhoto
+            }
+            style={styles.userPhoto}
+          />
           <Text style={styles.postUser}>{post.user.displayName}</Text>
         </View>
         <Text style={styles.postContent}>{post.content}</Text>
+        <View style={styles.carousel}>
+          <CustomCarousel imageURIs={post.imageURIs}/>
+        </View>
+        
         <View style={styles.likesCommentsContainer}>
           <View style={styles.likesContainer}>
             <TouchableOpacity onPress={() => toggleLikePost(post.id)}>
@@ -108,7 +111,24 @@ export default function Post({ post, posts, setPosts }) {
                   <Ionicons name="heart" size={24} color="#900C3F" />
                 </Animated.View>
             ) : (
-                <Ionicons name="heart-outline" size={24} color="#900C3F" />
+                <Animated.View
+                    style={[
+                    {
+                        transform: [
+                        {
+                            scale: likeAnimationsRef.current[post.id]
+                            ? likeAnimationsRef.current[post.id].interpolate({
+                                inputRange: [0, 0.5, 1],
+                                outputRange: [1, 2, 1],
+                                })
+                            : 1,
+                        },
+                        ],
+                    },
+                    ]}
+                >
+                  <Ionicons name="heart-outline" size={24} color="#900C3F" />
+                </Animated.View>
             )}
 
 

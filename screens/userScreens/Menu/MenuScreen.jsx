@@ -14,13 +14,13 @@ export default function MenuScreen() {
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]}>
           <MaterialIcons name='search' style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]} onPress={() => navigation.navigate('Home')}>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemLarge]} onPress={() => navigation.navigate('HomeTab')}>
           <MaterialIcons name='home' style={styles.menuIcon} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('Notifications')}>
           <Entypo name='notification' style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('Profil')}>
+      <TouchableOpacity style={[styles.menuItem, styles.menuItemSmall]} onPress={() => navigation.navigate('ProfilTab')}>
           <Feather name='user' style={styles.menuIcon} />
       </TouchableOpacity>
     </View>

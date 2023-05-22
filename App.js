@@ -6,18 +6,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import GuestNavigator from './screens/navigators/GuestNavigator';
 import UserNavigator from './screens/navigators/UserNavigator';
 import { useAuthentication } from './contexts/useAuthentification';
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function App() {
   const user = useAuthentication();
 
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-      {user.user ? <UserNavigator /> : <GuestNavigator />}
-      </NavigationContainer>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <NavigationContainer>
+        {user.user ? <UserNavigator /> : <GuestNavigator />}
+        </NavigationContainer>
+      </View>
+    </GestureHandlerRootView>
+    
   );
 }
 

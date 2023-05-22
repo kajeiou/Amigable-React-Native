@@ -116,12 +116,12 @@ const AuthService = {
     }
   },
   emailUpdate: async (email) => {
-      updateEmail(auth.currentUser, email).then(() => {
-          return true
-      }).catch((error) => {
-          console.log(error.message)
-          return error.message
-      });
+    updateEmail(auth.currentUser, email).then(() => {
+        return true
+    }).catch((error) => {
+        console.log(error.message)
+        return error.message
+    });
   },
   verification: async () => {
     try {

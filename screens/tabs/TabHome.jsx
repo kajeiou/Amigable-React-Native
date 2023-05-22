@@ -1,15 +1,16 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import PublicPostsScreen from '../userScreens/PublicPostsScreen';
-import PrivatePostsScreen from '../userScreens/PrivatePostsScreen';
-
+import PublicPostsScreen from '../userScreens/Home/PublicPostsScreen';
+import PrivatePostsScreen from '../userScreens/Home/PrivatePostsScreen';
+import { SafeAreaView, StyleSheet } from 'react-native';
 const Tab = createMaterialTopTabNavigator();
 
-export default function TabScreen() {
+export default function TabHome() {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
+    <SafeAreaView style={styles.container}>
+      <Tab.Navigator
+      screenOptions={{
         activeTintColor: '#900C3F',
         inactiveTintColor: '#999999',
         style: {
@@ -42,15 +43,24 @@ export default function TabScreen() {
         }}
       />
       <Tab.Screen
-        name="Subscriptions"
+        name="Abonnements"
         component={PrivatePostsScreen}
         options={{
-          tabBarLabel: 'Subscriptions',
+          tabBarLabel: 'Abonnements',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="heart" color={color} size={size} />
           ),
         }}
       />
     </Tab.Navigator>
+    </SafeAreaView>
+    
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+});
