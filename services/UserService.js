@@ -12,9 +12,10 @@ import {initializeAuth} from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getReactNativePersistence} from "firebase/auth/react-native";
 import firebaseConfig from './config/firebaseConfig';
-import { setDoc, doc, getDoc, getFirestore, initializeFirestore } from 'firebase/firestore';
+import { setDoc, doc, getDoc, getFirestore } from 'firebase/firestore';
 import { User } from '../classes/User';
 import { addUserToAsyncStorage,getUserFromAsyncStorage,updateUserToAsyncStorage } from "../utils/AsyncStorageUtil";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const app = initializeApp(firebaseConfig);
 initializeAuth(app, {
@@ -23,6 +24,7 @@ initializeAuth(app, {
 
 export const auth = getAuth(app);
 const firestore = getFirestore(app);
+const storage = getStorage();
 
 const AuthService = { 
   register: async (email, displayName, password) => {
@@ -84,11 +86,6 @@ const AuthService = {
         throw new Error('Utilisateur non authentifié');
       }
   
-      await updateProfile(user, {
-        displayName: displayName,
-        photoURL: photoURL
-      });
-  
       const userRef = doc(firestore, 'users', user.uid);
   
       const userData = {
@@ -98,46 +95,58 @@ const AuthService = {
         biography: biography
       };
   
+      await updateProfile(user, {
+        displayName: displayName,
+        photoURL: photoURL
+      });
+  
       await setDoc(userRef, userData, { merge: true });
   
-      // Update user in AsyncStorage
+      const imageRef = ref(storage, `users/${user.uid}/${Date.now().toString()}`);
+      const response = await fetch(photoURL);
+      const blob = await response.blob();
+      await uploadBytes(imageRef, blob);
+      const downloadURL = await getDownloadURL(imageRef);
+      userData.photoURL = downloadURL;
+  
       const storedUser = await getUserFromAsyncStorage();
       storedUser.displayName = displayName;
-      storedUser.photoURL = photoURL;
+      storedUser.photoURL = userData.photoURL;
       storedUser.phoneNumber = phoneNumber;
       storedUser.biography = biography;
       await updateUserToAsyncStorage(storedUser);
   
       return true;
     } catch (error) {
-      console.log("[User Service] "+error.message);
+      console.log("[User Service] " + error.message);
       return error;
     }
   },
+  
   emailUpdate: async (email) => {
     updateEmail(auth.currentUser, email).then(() => {
-        return true
+      return true
     }).catch((error) => {
-        console.log("[User Service] "+error.message)
-        return error.message
+      console.log("[User Service] "+error.message)
+      return error.message
     });
   },
   verification: async () => {
     try {
-        return await sendEmailVerification(auth.currentUser)
+      return await sendEmailVerification(auth.currentUser)
     } catch (e) {
-        console.log("[User Service] "+e.message)
-        return e.message
+      console.log("[User Service] "+e.message)
+      return e.message
     }
   },
 
   signOut: async () => {
-      try {
-          return await signOut(auth);
-      } catch (error) {
-          console.log("[User Service] "+ e.message)
-          return e.message
-      }
+    try {
+      return await signOut(auth);
+    } catch (error) {
+      console.log("[User Service] "+ e.message)
+      return e.message
+    }
   },
   getUserById: async (userId) => {
     try {

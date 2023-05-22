@@ -76,7 +76,7 @@ export default function ProfilScreen() {
 
       setDisplayName(formData.displayName);
       setEmail(formData.email);
-      setPhotoURL(formData.photoURL);
+      setPhotoURL(photoURL);
       setPhoneNumber(formData.phoneNumber);
       setBiography(formData.biography);
       setEmailVerified(formData.emailVerified);
@@ -181,13 +181,6 @@ export default function ProfilScreen() {
               placeholder="E-mail"
               value={formData.email}
               disabled
-            />
-
-            <CustomTextInput
-              placeholder="URL image de profil"
-              value={formData.photoURL}
-              onChangeText={(textEntered) => handleChange('photoURL', textEntered)}
-              keyboardType="url"
             />
             <TouchableOpacity onPress={handleAttachImage}>
               <MaterialIcons name="camera-alt" size={30} color="#000" style={styles.buttonIcon} />

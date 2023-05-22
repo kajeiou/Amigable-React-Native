@@ -1,6 +1,6 @@
 import { getFirestore, collection, addDoc, getDocs, getDoc } from 'firebase/firestore';
 import { doc, updateDoc, deleteDoc,query, where, orderBy } from 'firebase/firestore';
-import { getStorage, ref, getDownloadURL,uploadBytes, getMetadata  } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL,uploadBytes  } from 'firebase/storage';
 import { getUserFromAsyncStorage } from '../utils/AsyncStorageUtil';
 import { Post } from '../classes/Post';
 import UserService from '../services/UserService';
