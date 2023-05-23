@@ -34,10 +34,13 @@ export default function PostComment({ post, posts, setPosts }) {
     <View>
       <TouchableOpacity onPress={handleToggleComments} style={styles.viewCommentsButton}>
         <Text style={styles.viewCommentsButtonText}>
-          {showComments ? 'Cacher les commentaires' : 'Voir les commentaires'}
+          {showComments ? 'Cacher les commentaires' : 'Voir les '+ post.comments.length +' commentaires'}
+          
         </Text>
       </TouchableOpacity>
-      <PostViewComment showComments={showComments} post={post} onPress={handleToggleComments} />
+      
+      {post.comments ? <PostViewComment showComments={showComments} post={post} onPress={handleToggleComments} comments={post.comments} /> : ''}
+      
       <View style={styles.commentContainer}>
         <TextInput
           style={styles.commentInput}

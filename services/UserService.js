@@ -95,13 +95,16 @@ const AuthService = {
         biography: biography
       };
   
+      // Mettre à jour le profil de l'utilisateur
       await updateProfile(user, {
         displayName: displayName,
         photoURL: photoURL
       });
   
+      // Mettre à jour les données de l'utilisateur dans Firestore
       await setDoc(userRef, userData, { merge: true });
   
+      // Ajouter l'image sur le stockage
       const imageRef = ref(storage, `users/${user.uid}/${Date.now().toString()}`);
       const response = await fetch(photoURL);
       const blob = await response.blob();
@@ -109,6 +112,7 @@ const AuthService = {
       const downloadURL = await getDownloadURL(imageRef);
       userData.photoURL = downloadURL;
   
+      // Mettre à jour les données de l'utilisateur dans AsyncStorage
       const storedUser = await getUserFromAsyncStorage();
       storedUser.displayName = displayName;
       storedUser.photoURL = userData.photoURL;
@@ -122,6 +126,7 @@ const AuthService = {
       return error;
     }
   },
+  
   
   emailUpdate: async (email) => {
     updateEmail(auth.currentUser, email).then(() => {

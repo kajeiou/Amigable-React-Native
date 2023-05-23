@@ -4,35 +4,30 @@ import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Image } from 'rea
 import { SimpleLineIcons } from '@expo/vector-icons';
 import emptyPhoto from './../assets/images/empty_photo.png';
 
-export default function PostViewComment({ showComments, post, onPress }) {
+export default function PostViewComment({ showComments, post, onPress, comments }) {
+
+  
+  comments && comments.map((comment, index) => (console.log(comment.user)))
     return (
       <>
-        {showComments && post.comments.length > 0 && (
-            <ScrollView contentContainerStyle={styles.commentsContainer}>
-            {post.comments.map((comment, index) => (
-                <View key={index} style={styles.commentContainer}>
-                <View style={styles.postHeader}>
-                <Image
-                  source={
-                    comment.user.photoURL && comment.user.photoURL !==''
-                      ? { uri: post.user.photoURL }
-                      : emptyPhoto
-                  }
-                  style={styles.userPhoto}
-                />
-                <Text style={styles.postUser}>{post.user.displayName}</Text>
+
+        <ScrollView contentContainerStyle={styles.commentsContainer}>
+          {comments && comments.map((comment, index) => (
+            <View key={index} style={styles.commentContainer}>
+              <View style={styles.postHeader}>
+                {comment.user && <Text style={styles.postUser}>{comment.user.displayName}</Text>}
               </View>
-                <Text style={styles.commentContent}>{comment.content}</Text>
-                <Text style={styles.commentDate}>
-                    {moment(comment.createdAt).format('DD/MM/YYYY HH:mm')}
-                </Text>
-                </View>
-            ))}
-            <TouchableOpacity style={styles.closeIconContainer} onPress={onPress}>
-                <SimpleLineIcons name="arrow-up" size={24} color="#900C3F" />
-            </TouchableOpacity>
-            </ScrollView>
-        )}
+              <Text style={styles.commentContent}>{comment.content}</Text>
+              <Text style={styles.commentDate}>
+                {moment(comment.createdAt).format('DD/MM/YYYY HH:mm')}
+              </Text>
+            </View>
+          ))}
+          {comments === null && <Text>Aucun commentaire disponible.</Text>}
+          <TouchableOpacity style={styles.closeIconContainer} onPress={onPress}>
+            <SimpleLineIcons name="arrow-up" size={24} color="#900C3F" />
+          </TouchableOpacity>
+        </ScrollView>
       </>
     );
 }

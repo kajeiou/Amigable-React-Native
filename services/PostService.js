@@ -91,6 +91,7 @@ const PostService = {
             commentUser
           );
         });
+        
 
         const imageAvailability = await ImageService.checkImageAvailability(doc.data().imageURIs);
 
